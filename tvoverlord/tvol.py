@@ -472,7 +472,7 @@ def add(show_name, bulk, season, episode):
               help='Number of search results to list. (default: 5)')
 @click.option('--ignore', '-i', is_flag=True,
               help="Ignore 'Not connected to vpn' warning.")
-def nondbshow(search_string, count, ignore):
+def nondb(search_string, count, ignore):
     """Download anything, ignoring the database.
 
     This just does a simple search and passes you choise to the bittorrent
@@ -499,7 +499,7 @@ def nondbshow(search_string, count, ignore):
               type=click.Choice(['delete', 'deactivate', 'activate']),
               help='Preform actions on a show.')
 @click.argument('show_name')
-def editshow(show_name, action):
+def edit(show_name, action):
     """Edit the contents of the database.
 
     This allows you to change the fields in the database for a show.
@@ -590,7 +590,7 @@ def history(criteria, what_to_show):
 @tvol.command('re-copy', context_settings=CONTEXT_SETTINGS)
 @click.argument('criteria', required=False)
 def copy(criteria):
-    """Re copy a show to the library location.
+    """Re-copy a show to the library location.
 
     CRITERIA can be days, a date or a show title.  If its days, it
     will show results from now to X days ago.  If it is a date, it
@@ -608,7 +608,7 @@ def copy(criteria):
 @tvol.command('re-download', context_settings=CONTEXT_SETTINGS)
 @click.argument('criteria', required=False)
 def redownload(criteria):
-    """Redownload a previous magnet link.
+    """Re-download a previous magnet link.
 
     CRITERIA can be days, a date or a show title.  If its days, it
     will show results from now to X days ago.  If it is a date, it
