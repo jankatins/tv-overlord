@@ -7,6 +7,7 @@ import click
 
 import concurrent.futures
 import socket
+from tvoverlord.config import Config
 
 
 class Provider():
@@ -31,9 +32,11 @@ class Provider():
             self.url = url
 
             try:
-                r = requests.get(url)
+                r = requests.get(url, timeout=Config.timeout)
             except requests.exceptions.ConnectionError:
                 # can't connect, go to next url
+                continue
+            except requests.exceptions.Timeout:
                 continue
 
             html = r.content
@@ -94,7 +97,7 @@ class Provider():
 
         url = '{}{}'.format('http://1337x.to', detail[0])
         try:
-            r = requests.get(url)
+            r = requests.get(url, timeout=Config.timeout)
         except requests.exceptions.ConnectionError:
             # can't connect, go to next url
             return

@@ -3,10 +3,12 @@ from time import mktime
 from datetime import datetime
 from pprint import pprint as pp
 import click
+import socket
 
 import feedparser
 from tvoverlord.tvutil import sxxexx, hash2magnet
 from tvoverlord.util import U
+from tvoverlord.config import Config
 
 
 class Provider():
@@ -24,6 +26,7 @@ class Provider():
 
         query = urllib.parse.quote(search_string)
 
+        socket.setdefaulttimeout(Config.timeout)
         show_data = []
         for try_url in self.provider_urls:
             url = '%s/rss/type/search/x/%s/' % (try_url, query)

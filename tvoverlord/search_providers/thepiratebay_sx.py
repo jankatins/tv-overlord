@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 import requests
 import click
 
+from tvoverlord.config import Config
+
 
 class Provider (object):
 
@@ -55,9 +57,11 @@ class Provider (object):
                 urls += '%s/0/7/0 ' % search_string
                 #click.echo('>', url)
                 try:
-                    r = requests.get(url)
+                    r = requests.get(url, timeout=Config.timeout)
                 except requests.exceptions.ConnectionError:
                     # if can't connect, go to the next url
+                    continue
+                except requests.exceptions.Timeout:
                     continue
                 html = r.content
                 soup = BeautifulSoup(html, 'html.parser')

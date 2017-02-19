@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import requests
 from pprint import pprint as pp
 import concurrent.futures
+from tvoverlord.util import U
+from tvoverlord.config import Config
 
 
 class Provider():
@@ -29,9 +31,11 @@ class Provider():
             url = search_tpl.format(self.base_url, search)
             self.url = url
             try:
-                r = requests.get(url)
+                r = requests.get(url, timeout=Config.timeout)
             except requests.exceptions.ConnectionError:
                 # can't connect, go to next url
+                continue
+            except requests.exceptions.Timeout:
                 continue
 
             html = r.content
@@ -92,7 +96,7 @@ class Provider():
     def _get_details(self, torrent):
         url = '{}{}'.format(self.base_url, torrent[0])
         try:
-            r = requests.get(url)
+            r = requests.get(url, timeout=Config.timeout)
         except requests.exceptions.ConnectionError:
             # can't connect, go to next url
             return

@@ -402,7 +402,9 @@ def list_missing(today):
               help='Comma seperated list of search engines to ignore.')
 @click.option('--filters', '-f',
               help='Comma seperated list of strings to filter search results.  This will override config.ini.')
-def download(show_name, today, ignore, count, exclude, filters):
+@click.option('--timeout', type=click.FLOAT,
+              help='Set the timeout for non responding sites.')
+def download(show_name, today, ignore, count, exclude, filters, timeout):
     """Download available episodes.
 
     If SHOW_NAME is used, it will download any shows that match that title
@@ -424,6 +426,9 @@ def download(show_name, today, ignore, count, exclude, filters):
     if filters:
         Config.filter_list = [
             i.strip().lower() for i in filters.split(',') if i.strip()]
+
+    if timeout:
+        Config.timeout = timeout
 
     shows = Shows(name_filter=show_name)
     for show in shows:

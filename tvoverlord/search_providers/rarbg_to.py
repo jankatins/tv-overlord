@@ -4,6 +4,7 @@ from pprint import pprint as pp
 import time
 import click
 from tvoverlord.util import U
+from tvoverlord.config import Config
 
 
 # https://torrentapi.org/apidocs_v2.txt
@@ -27,8 +28,10 @@ class Provider():
         url = '{}?get_token=get_token&app_id=tvoverlord'.format(self.baseurl)
 
         try:
-            r = requests.get(url)
+            r = requests.get(url, timeout=Config.timeout)
         except requests.exceptions.ConnectionError:
+            return []
+        except requests.exceptions.Timeout:
             return []
 
         if r.status_code == 403:
@@ -57,9 +60,11 @@ class Provider():
             self.url = self.url + ' ' + url
 
             try:
-                r = requests.get(url)
+                r = requests.get(url, timeout=Config.timeout)
             except requests.exceptions.ConnectionError:
                 # can't connect, go to next url
+                continue
+            except requests.exceptions.Timeout:
                 continue
 
             results = r.json()

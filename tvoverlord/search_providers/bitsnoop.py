@@ -5,10 +5,12 @@ from time import mktime
 from datetime import datetime
 from pprint import pprint as pp
 import click
+import socket
 
 import feedparser
 
 from tvoverlord.util import U
+from tvoverlord.config import Config
 
 
 class Provider(object):
@@ -39,6 +41,7 @@ class Provider(object):
         query = search_string
         encoded_search = urllib.parse.quote(query)
 
+        socket.setdefaulttimeout(Config.timeout)
         show_data = []
         for try_url in self.provider_urls:
             url = '%s/search/all/{}/c/d/1/?fmt=rss' % (try_url)

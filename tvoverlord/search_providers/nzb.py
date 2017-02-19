@@ -47,7 +47,7 @@ class Provider:
 
         # retrieve the data with requests
         try:
-            r = requests.get(url)
+            r = requests.get(url, timeout=Config.timeout)
             r.raise_for_status()
         except requests.exceptions.InvalidURL as e:
             self.log('InvalidURL', e)
@@ -58,6 +58,10 @@ class Provider:
             self.notify('Connection Error.', e)
             return
         except requests.exceptions.HTTPError as e:
+            self.log(e)
+            self.notify(e)
+            return
+        except requests.exceptions.Timeout as e:
             self.log(e)
             self.notify(e)
             return

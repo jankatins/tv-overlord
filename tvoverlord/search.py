@@ -147,8 +147,7 @@ class Search(object):
         else:
             raise ValueError('search_type can only be "torrent" or "nzb"')
 
-        socket.setdefaulttimeout(10)
-        # socket.setdefaulttimeout(0.1)
+        socket.setdefaulttimeout(Config.timeout)
         episodes = []
         with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
             # For nzb's, the idx is needed so Provider.download knows

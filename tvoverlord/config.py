@@ -467,6 +467,14 @@ class Configuration:
         except configparser.NoOptionError:
             self.filter_list = []
 
+        default_timeout = 10
+        try:
+            self.timeout = float(cfg.get('App Settings', 'timeout'))
+        except configparser.NoOptionError:
+            self.timeout = default_timeout
+        if not self.timeout:
+            self.timeout = default_timeout
+
         # [File Locations]
         try:
             self.tv_dir = os.path.expanduser(
