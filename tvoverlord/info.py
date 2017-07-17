@@ -82,7 +82,7 @@ def info(show_name, show_all, sort_by_next, db_status,
         counter += 1
         for i in show.series:  # season
             for j in show.series[i]:  # episode
-                b_date = show.series[i][j]['firstaired']
+                b_date = show.series[i][j]['firstAired']
                 if not b_date: continue  # some episode have no broadcast date?
 
                 split_date = b_date.split('-')
@@ -98,8 +98,8 @@ def info(show_name, show_all, sort_by_next, db_status,
                 fancy_date = future_date.strftime('%b %d')
                 if broadcast_date >= today:
                     episodes_list.append('S%sE%s, %s (%s)' % (
-                        show.series[i][j]['seasonnumber'].rjust(2, '0'),
-                        show.series[i][j]['episodenumber'].rjust(2, '0'),
+                        show.series[i][j]['airedSeason'].rjust(2, '0'),
+                        show.series[i][j]['airedEpisodeNumber'].rjust(2, '0'),
                         fancy_date,
                         diff.days + 1,
                     ))

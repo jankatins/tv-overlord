@@ -28,18 +28,18 @@ class Show:
     Thetvdb season fields added:
     ----------------------------
     actors, added, addedby, airs_dayofweek, airs_time, banner,
-    contentrating, fanart, firstaired, genre, get_thetvdb_data, id,
+    contentrating, fanart, firstAired, genre, get_thetvdb_data, id,
     imdb_id, language, lastupdated, network, networkid, overview,
     poster, rating, ratingcount, runtime, seriesid, seriesname,
     set_db_data, status, zap2it_id
 
     Thetvdb episode fieldnames:
     ---------------------------
-    episodenumber, rating, overview, dvd_episodenumber, dvd_discid,
-    combined_episodenumber, epimgflag, id, seasonid, seasonnumber,
+    airedEpisodeNumber, rating, overview, dvd_episodenumber, dvd_discid,
+    combined_episodenumber, epimgflag, id, seasonid, airedSeason,
     writer, lastupdated, filename, absolute_number, ratingcount,
     combined_season, imdb_id, director, dvd_chapter, dvd_season,
-    gueststars, seriesid, language, productioncode, firstaired,
+    gueststars, seriesid, language, productioncode, firstAired,
     episodename
     """
     logging.getLogger('tvdb_api').setLevel(logging.WARNING)
@@ -112,7 +112,7 @@ class Show:
         language       - en
         zap2it_id      - SH00848357
         addedby        - None
-        firstaired     - 2006-10-11
+        firstAired     - 2006-10-11
         runtime        - 30
         overview       - Emmy Award Winner Tina Fey writ...
 
@@ -183,7 +183,12 @@ class Show:
             sys.exit(1)
 
         for i in series.data:
-            setattr(self, i, series.data[i])
+            if i == 'seriesName':
+                # tvdb v1 API :-(
+                att = 'seriesname'
+            else:
+                att = i
+            setattr(self, att, series.data[i])
         self.series = series
 
     def download_missing(self, episode_display_count, download_today=False):
@@ -330,15 +335,15 @@ class Show:
             click.echo()
             indent = '     '
             for index, show in enumerate(result):
-                title = show['seriesname']
+                title = show['seriesName']
                 click.echo(' %2s. ' % (index + 1), nl=False)
                 click.secho(title, bold=True)
                 if 'overview' in show:
                     click.echo(format_paragraphs(
                         show['overview'], indent=indent))
-                if 'firstaired' in show:
+                if 'firstAired' in show:
                     click.secho(
-                        '%sFirst aired: %s' % (indent, show['firstaired']),
+                        '%sFirst aired: %s' % (indent, show['firstAired']),
                         fg='green')
                 click.echo()
 
@@ -348,7 +353,7 @@ class Show:
             idchoice = choice - 1
             show = result[idchoice]
 
-        self.db_name = show['seriesname']  # name
+        self.db_name = show['seriesName']  # name
         self._get_thetvdb_series_data()
 
         last_season = 1
@@ -356,7 +361,7 @@ class Show:
         for season in self.series:
             last_season = season
             for episode in self.series[season]:
-                b_date = self.series[season][episode]['firstaired']
+                b_date = self.series[season][episode]['firstAired']
                 if not b_date:
                     continue  # some episodes have no broadcast date
                 split_date = b_date.split('-')
@@ -446,7 +451,7 @@ class Show:
 
         for i in self.series:  # for each season
             for j in self.series[i]:  # for each episode
-                b_date = self.series[i][j]['firstaired']
+                b_date = self.series[i][j]['firstAired']
                 if not b_date:
                     continue  # some episode have no broacast date?
                 split_date = b_date.split('-')
@@ -467,8 +472,8 @@ class Show:
                         self.set_next_episode(broadcast_date)
                         break
 
-                last_season = self.series[i][j]['seasonnumber']
-                last_episode = self.series[i][j]['episodenumber']
+                last_season = self.series[i][j]['airedSeason']
+                last_episode = self.series[i][j]['airedEpisodeNumber']
                 last_broadcast = [
                     int(last_season),
                     int(last_episode)

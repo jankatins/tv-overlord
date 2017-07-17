@@ -111,8 +111,8 @@ def calendar(show_name, show_all, sort_by_next, no_color, days):
         last_date = 0
         for i in show.series:  # season
             for j in show.series[i]:  # episode
-                episode_number = show.series[i][j]['episodenumber']
-                b_date = show.series[i][j]['firstaired']
+                episode_number = show.series[i][j]['airedEpisodeNumber']
+                b_date = show.series[i][j]['firstAired']
                 if not b_date:
                     continue  # some episode have no broadcast date?
                 split_date = b_date.split('-')
@@ -126,7 +126,7 @@ def calendar(show_name, show_all, sort_by_next, no_color, days):
                 days_away = (broadcast_date - today).days + 1
                 if days_away >= calendar_columns:
                     continue  # don't include days after the width of the screen
-                if show.series[i][j]['seasonnumber'] == '0':
+                if show.series[i][j]['airedSeason'] == '0':
                     continue  # not interested in season 0 episodes.
 
                 if first_display_date:
