@@ -30,7 +30,7 @@ class Show:
     actors, added, addedby, airs_dayofweek, airs_time, banner,
     contentrating, fanart, firstaired, genre, get_thetvdb_data, id,
     imdb_id, language, lastupdated, network, networkid, overview,
-    poster, rating, ratingcount, runtime, seriesid, seriesname,
+    poster, rating, ratingcount, runtime, seriesid, seriesName,
     set_db_data, status, zap2it_id
 
     Thetvdb episode fieldnames:
@@ -56,8 +56,11 @@ class Show:
         if show_type not in typelist:
             raise Exception('incorrect show type')
 
-        self.tvapi = tvdb_api.Tvdb(apikey=Config.thetvdb_apikey,
-                                   cache=Config.use_cache)
+        cache = Config.use_cache
+        if Config.use_cache:
+            # set to a dir since the default location does not work.
+            cache = Config.user_dir
+        self.tvapi = tvdb_api.Tvdb(apikey=Config.thetvdb_apikey, cache=cache)
 
         if show_type == 'current':
             self._set_db_data(dbdata)
@@ -94,7 +97,7 @@ class Show:
         rating         - 8.6
         airs_dayofweek - Thursday
         contentrating  - TV-14
-        seriesname     - 30 Rock
+        seriesName     - 30 Rock
         id             - 79488
         airs_time      - 8:30 PM
         network        - NBC
@@ -300,7 +303,7 @@ class Show:
         if len(missing) == 0:
             return False
         ret = style(self.db_name, fg='green', bold=True)
-        ret += ' - %s, %s' % (self.airs_dayofweek, self.airs_time)
+        ret += ' - %s, %s' % (self.airsDayOfWeek, self.airsTime)
         ret += '\n'
         indent = '    '
         missing_list = []
@@ -332,7 +335,7 @@ class Show:
             click.echo()
             indent = '     '
             for index, show in enumerate(result):
-                title = show['seriesname']
+                title = show['seriesName']
                 click.echo(' %2s. ' % (index + 1), nl=False)
                 click.secho(title, bold=True)
                 if 'overview' in show:
@@ -350,7 +353,7 @@ class Show:
             idchoice = choice - 1
             show = result[idchoice]
 
-        self.db_name = show['seriesname']  # name
+        self.db_name = show['seriesName']  # name
         self._get_thetvdb_series_data()
 
         last_season = 1
@@ -492,17 +495,17 @@ class Show:
 
     def edit(self, action):
         if action == 'delete':
-            if click.confirm('Are you sure you want to delete %s?' % self.seriesname):
+            if click.confirm('Are you sure you want to delete %s?' % self.seriesName):
                 self.delete()
-                msg = '%s deleted' % self.seriesname
+                msg = '%s deleted' % self.seriesName
             else:
-                msg = '%s not deleted' % self.seriesname
+                msg = '%s not deleted' % self.seriesName
         elif action == 'deactivate':
             self.set_inactive()
-            msg = '%s deactivated' % self.seriesname
+            msg = '%s deactivated' % self.seriesName
         elif action == 'activate':
             self.set_active()
-            msg = '%s activated' % self.seriesname
+            msg = '%s activated' % self.seriesName
         else:
             sys.exit('Incorrect action for show.edit()')
 
@@ -584,7 +587,7 @@ class Show:
                 'episode': episode,
                 'season': season
             }
-            msg = '%s is already in the db. Its status is now set to "active"' % self.seriesname
+            msg = '%s is already in the db. Its status is now set to "active"' % self.seriesName
         else:
             sql = '''
                 INSERT INTO shows (
@@ -595,7 +598,7 @@ class Show:
             values = {'network_status': self.status,
                       'status': 'active',
                       'thetvdb_id': self.id,
-                      'name': self.seriesname,
+                      'name': self.seriesName,
                       'season': season,
                       'episode': episode}
             episode += 1
@@ -603,7 +606,7 @@ class Show:
             if season == 0:
                 season += 1
             season = str(season)
-            msg = '%s %s added.' % (self.seriesname, sxxexx(season, episode))
+            msg = '%s %s added.' % (self.seriesName, sxxexx(season, episode))
 
         DB.run_sql(sql, values)
         return msg

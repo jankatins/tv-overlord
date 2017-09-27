@@ -59,6 +59,8 @@ def dict_factory(cursor, row):
 
 
 def format_paragraphs(msg, indent=''):
+    if not msg:
+        return ''
     paragraphs = re.split('\n\n+', msg)
     for i, paragraph in enumerate(paragraphs):
         paragraph = textwrap.dedent(paragraph).strip()

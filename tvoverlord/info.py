@@ -57,7 +57,7 @@ def info(show_name, show_all, sort_by_next, db_status,
 
         imdb_url = thetvdb_url = ''
         if show_links:
-            imdb_url = style('\n    IMDB.com:    http://imdb.com/title/%s' % show.imdb_id,
+            imdb_url = style('\n    IMDB.com:    http://imdb.com/title/%s' % show.imdbId,
                              fg=colors['links'])
             thetvdb_url = style('\n    TheTVDB.com: http://thetvdb.com/?tab=series&id=%s' % show.id,
                                 fg=colors['links'])
