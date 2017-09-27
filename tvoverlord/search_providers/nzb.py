@@ -39,7 +39,7 @@ class Provider:
             't':      'search',
             'apikey': self.apikey,
             'q':      search_string,
-            'limit':  5,
+            'limit':  Config.nzbcount,
             'o':      'xml',
         }
         url = '%s/api?%s' % (self.url, urllib.parse.urlencode(qs))

@@ -430,6 +430,9 @@ def download(show_name, today, ignore, count, exclude, filters, timeout):
     if timeout:
         Config.timeout = timeout
 
+    # this is used in nzb searches
+    Config.nzbcount = count
+
     shows = Shows(name_filter=show_name)
     for show in shows:
         show.download_missing(count, today)

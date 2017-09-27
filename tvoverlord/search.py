@@ -185,13 +185,21 @@ class Search(object):
                 # move up two lines
                 click.echo('[%sA' % 3)
 
-                episodes = episodes + results[:-1]
+                if self.search_type == 'torrent':
+                    episodes = episodes + results[:-1]
+                elif self.search_type == 'nzb':
+                    # episodes = episodes + results[:-1]
+                    if episodes:
+                        episodes.append(results[:-1])
 
         # go up 3 lines to remove the progress bar
         click.echo('[%sA' % 2)
 
         if self.search_type == 'torrent':
             self.sort_torrents(episodes)
+        else:
+            pp(episodes)
+            exit()
 
         if Config.filter_list:
             episodes = [i for i in episodes if self.filter_episode(i)]

@@ -166,9 +166,11 @@ class Show:
             click.echo('\nShow not found: %s' % self.db_name, err=True)
             return
         except tvdb_api.tvdb_error as e:
-            msg = tvdb_msg.format(error_no=102, stack_msg=e)
-            click.echo(msg, err=True)
-            sys.exit(1)
+            # msg = tvdb_msg.format(error_no=102, stack_msg=e)
+            # click.echo(msg, err=True)
+            # sys.exit(1)
+            print('>>> ERROR', self.db_name)
+            return
         except UnboundLocalError as e:
             msg = tvdb_msg.format(error_no=103, stack_msg=e)
             click.echo(msg, err=True)
