@@ -67,7 +67,10 @@ class Provider():
             except requests.exceptions.Timeout:
                 continue
 
-            results = r.json()
+            try:
+                results = r.json()
+            except:
+                continue
             if 'error_code' in results.keys() and results['error_code'] == 20:
                 continue  # no results found
 
